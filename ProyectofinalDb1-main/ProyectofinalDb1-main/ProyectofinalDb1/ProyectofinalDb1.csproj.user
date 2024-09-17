@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="forms\BitacoraForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\CargoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\ContratoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\DepartamentoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\ReporteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\FuncionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\NivelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\PrioridadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\ProfesionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\SucursalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="forms\UsuarioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

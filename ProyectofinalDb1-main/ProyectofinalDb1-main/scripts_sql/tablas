@@ -1,0 +1,812 @@
+-- Active: 1715569022682@@127.0.0.1@5432@proyecto_db@public
+-- Crear la tabla "Departamento"
+CREATE TABLE "Departamento" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Poblacion" INT
+);
+
+-- Crear la tabla "Prioridad"
+CREATE TABLE "Prioridad" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL
+);
+
+-- Crear la tabla "Municipio"
+CREATE TABLE "Municipio" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Poblacion" INT,
+    "Prioridad" INT NOT NULL,
+    "Departamento" INT NOT NULL,
+    FOREIGN KEY ("Prioridad") REFERENCES "Prioridad" ("Codigo"),
+    FOREIGN KEY ("Departamento") REFERENCES "Departamento" ("Codigo")
+);
+
+-- Crear la tabla "Funcion"
+CREATE TABLE "Funcion" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Descripcion" TEXT
+);
+
+-- Crear la tabla "Cargo"
+CREATE TABLE "Cargo" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Salario" REAL,
+    "Funcion" INT NOT NULL,
+    FOREIGN KEY ("Funcion") REFERENCES "Funcion" ("Codigo")
+);
+
+-- Crear la tabla "Profesion"
+CREATE TABLE "Profesion" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Descripcion" TEXT
+);
+
+-- Crear la tabla "Nivel"
+CREATE TABLE "Nivel" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL
+);
+
+-- Crear la tabla "Usuario"
+CREATE TABLE "Usuario" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "NomUsuario" VARCHAR(64) NOT NULL,
+    "Clave" VARCHAR(64) NOT NULL,
+    "FechaCreacion" DATE NOT NULL,
+    "Nivel" INT NOT NULL,
+    FOREIGN KEY ("Nivel") REFERENCES "Nivel" ("Codigo")
+);
+
+-- Crear la tabla "Bitacora"
+CREATE TABLE "Bitacora" (
+    "Codigo" SERIAL PRIMARY KEY,
+    "FechaIngreso" DATE,
+    "HoraIngreso" TIME,
+    "FechaSalida" DATE,
+    "HoraSalida" TIME,
+    "Usuario" INT NOT NULL,
+    FOREIGN KEY ("Usuario") REFERENCES "Usuario" ("Codigo")
+);
+
+-- Crear la tabla "Empleado"
+CREATE TABLE "Empleado" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Cedula" VARCHAR(20) NOT NULL UNIQUE,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "DireccionResidencia" TEXT,
+    "Telefono" VARCHAR(20),
+    "Usuario" INT NOT NULL,
+    FOREIGN KEY ("Usuario") REFERENCES "Usuario" ("Codigo")
+);
+
+-- Crear la tabla "Sucursal"
+CREATE TABLE "Sucursal" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Nombre" VARCHAR(64) NOT NULL,
+    "Presupuesto" REAL,
+    "Municipio" INT NOT NULL,
+    "Director" INT NOT NULL,
+    FOREIGN KEY ("Municipio") REFERENCES "Municipio" ("Codigo"),
+    FOREIGN KEY ("Director") REFERENCES "Usuario" ("Codigo")
+);
+
+-- Crear la tabla "Contrato"
+CREATE TABLE "Contrato" (
+    "Codigo" INT NOT NULL PRIMARY KEY,
+    "Empleado" INT NOT NULL,
+    "Cargo" INT NOT NULL,
+    "Sucursal" INT NOT NULL,
+    "FechaInicio" DATE,
+    "FechaFin" DATE,
+    FOREIGN KEY ("Empleado") REFERENCES "Empleado" ("Codigo"),
+    FOREIGN KEY ("Cargo") REFERENCES "Cargo" ("Codigo"),
+    FOREIGN KEY ("Sucursal") REFERENCES "Sucursal" ("Codigo")
+);
+
+-- Crear la tabla "DetalleEmpleadoProfesion"
+CREATE TABLE "DetalleEmpleadoProfesion" (
+    "Empleado" INT NOT NULL,
+    "Profesion" INT NOT NULL,
+    PRIMARY KEY ("Empleado", "Profesion"),
+    FOREIGN KEY ("Empleado") REFERENCES "Empleado" ("Codigo"),
+    FOREIGN KEY ("Profesion") REFERENCES "Profesion" ("Codigo")
+);
+
+CREATE TABLE "Personas" (
+    "Id" INT NOT NULL,
+    "Nombre" VARCHAR(50) NOT NULL,
+    CONSTRAINT "personas_pkey" PRIMARY KEY ("Id")
+);
+
+-- Inserción en la tabla Personas
+INSERT INTO
+    "Personas" ("Id", "Nombre")
+VALUES (1, 'Maria del Monte'),
+    (2, 'Matias BB Ramirez'),
+    (3, 'Jucalo Perez');
+
+-- Inserciones en las tablas
+
+-- Inserción en la tabla Departamento
+INSERT INTO
+    "Departamento" (
+        "Codigo",
+        "Nombre",
+        "Poblacion"
+    )
+VALUES (1, 'Caldas', 1000000),
+    (2, 'Risaralda', 1500000),
+    (3, 'Sucre', 800000),
+    (4, 'Quindío', 1200000),
+    (5, 'Cundinamarca', 2000000),
+    (6, 'Vaupés', 700000),
+    (7, 'Magdalena', 900000),
+    (8, 'Santander', 600000),
+    (9, 'Guajira', 1100000),
+    (10, 'Cesar', 1300000);
+
+-- Inserción en la tabla Prioridad
+INSERT INTO
+    "Prioridad" ("Codigo", "Nombre")
+VALUES (1, 'Alta'),
+    (2, 'Media'),
+    (3, 'Baja');
+
+-- Inserción en la tabla Municipio
+INSERT INTO
+    "Municipio" (
+        "Codigo",
+        "Nombre",
+        "Poblacion",
+        "Prioridad",
+        "Departamento"
+    )
+VALUES (1, 'Santa Marta', 50000, 1, 7),
+    (2, 'Pereira', 75000, 3, 2),
+    (3, 'Armenia', 30000, 2, 4),
+    (4, 'Manizales', 45000, 2, 1),
+    (5, 'Valledupar', 60000, 3, 10),
+    (6, 'Bogotá', 35000, 1, 5),
+    (7, 'Riohacha', 40000, 2, 9),
+    (8, 'Mitú', 55000, 3, 6),
+    (9, 'Sincelejo', 48000, 2, 3),
+    (
+        10,
+        'Bucaramanga',
+        52000,
+        1,
+        8
+    );
+
+-- Inserción en la tabla Funcion
+INSERT INTO
+    "Funcion" (
+        "Codigo",
+        "Nombre",
+        "Descripcion"
+    )
+VALUES (
+        1,
+        'Gerente de Ventas',
+        'Encargado de supervisar las operaciones de ventas.'
+    ),
+    (
+        2,
+        'Analista de Marketing',
+        'Responsable de realizar análisis de mercado y estrategias de marketing.'
+    ),
+    (
+        3,
+        'Contador',
+        'Encargado de llevar la contabilidad y los registros financieros de la empresa.'
+    ),
+    (
+        4,
+        'Ingeniero de Sistemas',
+        'Desarrolla y mantiene sistemas de información.'
+    ),
+    (
+        5,
+        'Jefe de Recursos Humanos',
+        'Encargado de gestionar el personal y las relaciones laborales.'
+    ),
+    (
+        6,
+        'Abogado Corporativo',
+        'Asesora legalmente a la empresa en temas corporativos y comerciales.'
+    ),
+    (
+        7,
+        'Técnico de Soporte',
+        'Brinda soporte técnico a los usuarios de la empresa.'
+    ),
+    (
+        8,
+        'Diseñador Gráfico',
+        'Crea material gráfico y visual para la empresa.'
+    ),
+    (
+        9,
+        'Analista Financiero',
+        'Realiza análisis y proyecciones financieras.'
+    ),
+    (
+        10,
+        'Asistente Administrativo',
+        'Brinda apoyo administrativo en diversas áreas de la empresa.'
+    );
+
+-- Inserción en la tabla Cargo
+INSERT INTO
+    "Cargo" (
+        "Codigo",
+        "Nombre",
+        "Salario",
+        "Funcion"
+    )
+VALUES (
+        1,
+        'Director Comercial',
+        5000.00,
+        1
+    ),
+    (
+        2,
+        'Especialista en Redes Sociales',
+        3000.00,
+        2
+    ),
+    (
+        3,
+        'Auxiliar Contable',
+        2500.00,
+        3
+    ),
+    (
+        4,
+        'Desarrollador Full Stack',
+        4000.00,
+        4
+    ),
+    (
+        5,
+        'Especialista en Selección de Personal',
+        3200.00,
+        5
+    ),
+    (
+        6,
+        'Abogado Corporativo Senior',
+        4500.00,
+        6
+    ),
+    (
+        7,
+        'Técnico de Soporte Nivel 2',
+        2800.00,
+        7
+    ),
+    (
+        8,
+        'Diseñador Gráfico Senior',
+        3500.00,
+        8
+    ),
+    (
+        9,
+        'Analista Financiero Senior',
+        4200.00,
+        9
+    ),
+    (
+        10,
+        'Asistente Administrativo Junior',
+        2300.00,
+        10
+    );
+
+-- Inserción en la tabla Profesion
+INSERT INTO
+    "Profesion" (
+        "Codigo",
+        "Nombre",
+        "Descripcion"
+    )
+VALUES (
+        1,
+        'Administración de Empresas',
+        'Profesional encargado de la gestión administrativa de empresas.'
+    ),
+    (
+        2,
+        'Marketing',
+        'Profesional dedicado a la promoción y venta de productos y servicios.'
+    ),
+    (
+        3,
+        'Contaduría Pública',
+        'Profesional experto en contabilidad y finanzas.'
+    ),
+    (
+        4,
+        'Ingeniería de Sistemas',
+        'Profesional encargado del diseño y desarrollo de sistemas informáticos.'
+    ),
+    (
+        5,
+        'Recursos Humanos',
+        'Profesional especializado en la gestión del talento humano.'
+    ),
+    (
+        6,
+        'Derecho',
+        'Profesional en leyes y normativas legales.'
+    ),
+    (
+        7,
+        'Informática',
+        'Profesional experto en tecnologías de la información.'
+    ),
+    (
+        8,
+        'Diseño Gráfico',
+        'Profesional especializado en diseño visual.'
+    ),
+    (
+        9,
+        'Finanzas',
+        'Profesional dedicado al análisis financiero y gestión de inversiones.'
+    ),
+    (
+        10,
+        'Administración de Empresas',
+        'Profesional encargado de labores administrativas y de apoyo.'
+    );
+
+-- Inserción en la tabla Nivel
+INSERT INTO
+    "Nivel" ("Codigo", "Nombre")
+VALUES (1, 'Principal'),
+    (2, 'Paramétrico'),
+    (3, 'Esporádico');
+
+-- Inserción en la tabla Usuario
+INSERT INTO
+    "Usuario" (
+        "Codigo",
+        "NomUsuario",
+        "Clave",
+        "FechaCreacion",
+        "Nivel"
+    )
+VALUES (
+        1,
+        'juan_perez',
+        'clave123',
+        '2024-04-20',
+        1
+    ),
+    (
+        2,
+        'ana_gomez',
+        'clave456',
+        '2024-04-21',
+        2
+    ),
+    (
+        3,
+        'luisa_martinez',
+        'clave789',
+        '2024-04-22',
+        1
+    ),
+    (
+        4,
+        'carlos_rodriguez',
+        'claveabc',
+        '2024-04-23',
+        3
+    ),
+    (
+        5,
+        'maria_garcia',
+        'clavedef',
+        '2024-04-24',
+        1
+    ),
+    (
+        6,
+        'daniel_diaz',
+        'claveghi',
+        '2024-04-25',
+        2
+    ),
+    (
+        7,
+        'sofia_alvarez',
+        'clavejkl',
+        '2024-04-26',
+        2
+    ),
+    (
+        8,
+        'javier_ramirez',
+        'clavemno',
+        '2024-04-27',
+        1
+    ),
+    (
+        9,
+        'andrea_lopez',
+        'clavepqr',
+        '2024-04-28',
+        3
+    ),
+    (
+        10,
+        'camila_sanchez',
+        'clavestu',
+        '2024-04-29',
+        3
+    );
+
+-- Inserción en la tabla Bitacora
+INSERT INTO
+    "Bitacora" (
+        "FechaIngreso",
+        "HoraIngreso",
+        "FechaSalida",
+        "HoraSalida",
+        "Usuario"
+    )
+VALUES (
+        '2024-04-20',
+        '08:00:00',
+        '2024-04-20',
+        '17:00:00',
+        1
+    ),
+    (
+        '2024-04-21',
+        '08:30:00',
+        '2024-04-21',
+        '17:30:00',
+        2
+    ),
+    (
+        '2024-04-22',
+        '07:45:00',
+        '2024-04-22',
+        '16:45:00',
+        3
+    ),
+    (
+        '2024-04-23',
+        '09:00:00',
+        '2024-04-23',
+        '18:00:00',
+        4
+    ),
+    (
+        '2024-04-24',
+        '08:15:00',
+        '2024-04-24',
+        '17:15:00',
+        5
+    ),
+    (
+        '2024-04-25',
+        '07:30:00',
+        '2024-04-25',
+        '16:30:00',
+        6
+    ),
+    (
+        '2024-04-26',
+        '08:45:00',
+        '2024-04-26',
+        '17:45:00',
+        7
+    ),
+    (
+        '2024-04-27',
+        '08:00:00',
+        '2024-04-27',
+        '17:00:00',
+        8
+    ),
+    (
+        '2024-04-28',
+        '09:30:00',
+        '2024-04-28',
+        '18:30:00',
+        9
+    ),
+    (
+        '2024-04-29',
+        '09:15:00',
+        '2024-04-29',
+        '18:15:00',
+        10
+    );
+
+-- Inserción en la tabla Empleado
+INSERT INTO
+    "Empleado" (
+        "Codigo",
+        "Cedula",
+        "Nombre",
+        "DireccionResidencia",
+        "Telefono",
+        "Usuario"
+    )
+VALUES (
+        1,
+        '1234567890',
+        'Juan Pérez',
+        'Calle 123, Medellín',
+        '1234567890',
+        1
+    ),
+    (
+        2,
+        '2345678901',
+        'Ana Gómez',
+        'Carrera 456, Cali',
+        '2345678901',
+        2
+    ),
+    (
+        3,
+        '3456789012',
+        'Luisa Martínez',
+        'Avenida 789, Bogotá',
+        '3456789012',
+        3
+    ),
+    (
+        4,
+        '4567890123',
+        'Carlos Rodríguez',
+        'Calle 456, Bucaramanga',
+        '4567890123',
+        4
+    ),
+    (
+        5,
+        '5678901234',
+        'María García',
+        'Carrera 789, Barranquilla',
+        '5678901234',
+        5
+    ),
+    (
+        6,
+        '6789012345',
+        'Daniel Díaz',
+        'Avenida 123, Pasto',
+        '6789012345',
+        6
+    ),
+    (
+        7,
+        '7890123456',
+        'Sofía Álvarez',
+        'Calle 789, Cartagena',
+        '7890123456',
+        7
+    ),
+    (
+        8,
+        '8901234567',
+        'Javier Ramírez',
+        'Carrera 123, Ibagué',
+        '8901234567',
+        8
+    ),
+    (
+        9,
+        '9012345678',
+        'Andrea López',
+        'Avenida 456, Montería',
+        '9012345678',
+        9
+    ),
+    (
+        10,
+        '0123456789',
+        'Camila Sánchez',
+        'Calle 789, Tunja',
+        '0123456789',
+        10
+    );
+
+-- Inserción en la tabla Sucursal
+INSERT INTO
+    "Sucursal" (
+        "Codigo",
+        "Nombre",
+        "Presupuesto",
+        "Municipio",
+        "Director"
+    )
+VALUES (
+        1,
+        'Sucursal Santa Marta',
+        100000.00,
+        1,
+        1
+    ),
+    (
+        2,
+        'Sucursal Pereira',
+        150000.00,
+        2,
+        2
+    ),
+    (
+        3,
+        'Sucursal Armenia',
+        200000.00,
+        3,
+        3
+    ),
+    (
+        4,
+        'Sucursal Manizales',
+        120000.00,
+        4,
+        4
+    ),
+    (
+        5,
+        'Sucursal Valledupar',
+        180000.00,
+        5,
+        5
+    ),
+    (
+        6,
+        'Sucursal Bogotá',
+        220000.00,
+        6,
+        6
+    ),
+    (
+        7,
+        'Sucursal Riohacha',
+        130000.00,
+        7,
+        7
+    ),
+    (
+        8,
+        'Sucursal Mitú',
+        170000.00,
+        8,
+        8
+    ),
+    (
+        9,
+        'Sucursal Sincelejo',
+        190000.00,
+        9,
+        9
+    ),
+    (
+        10,
+        'Sucursal Bucaramanga',
+        210000.00,
+        10,
+        10
+    );
+
+-- Inserción en la tabla Contrato
+INSERT INTO
+    "Contrato" (
+        "Codigo",
+        "Empleado",
+        "Cargo",
+        "Sucursal",
+        "FechaInicio",
+        "FechaFin"
+    )
+VALUES (
+        1,
+        1,
+        1,
+        1,
+        '2023-05-10',
+        '2024-05-10'
+    ),
+    (
+        2,
+        2,
+        2,
+        2,
+        '2023-06-15',
+        '2024-06-15'
+    ),
+    (
+        3,
+        3,
+        3,
+        3,
+        '2023-07-20',
+        '2024-07-20'
+    ),
+    (
+        4,
+        4,
+        4,
+        4,
+        '2023-08-25',
+        '2024-08-25'
+    ),
+    (
+        5,
+        5,
+        5,
+        5,
+        '2023-09-30',
+        '2024-09-30'
+    ),
+    (
+        6,
+        6,
+        6,
+        6,
+        '2023-10-05',
+        '2024-10-05'
+    ),
+    (
+        7,
+        7,
+        7,
+        7,
+        '2023-11-10',
+        '2024-11-10'
+    ),
+    (
+        8,
+        8,
+        8,
+        8,
+        '2023-12-15',
+        '2024-12-15'
+    ),
+    (
+        9,
+        9,
+        9,
+        9,
+        '2024-01-20',
+        '2025-01-20'
+    ),
+    (
+        10,
+        10,
+        10,
+        10,
+        '2024-02-25',
+        '2025-02-25'
+    );
+
+-- Inserción en la tabla DetalleEmpleadoProfesion
+INSERT INTO
+    "DetalleEmpleadoProfesion" ("Empleado", "Profesion")
+VALUES (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5),
+    (6, 6),
+    (7, 7),
+    (8, 8),
+    (9, 9),
+    (10, 10);
